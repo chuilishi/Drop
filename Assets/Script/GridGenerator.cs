@@ -10,8 +10,8 @@ public class GridGenerator : MonoBehaviour
 {
     public static int width = 36;
     public static int height = 16;
-
     public SpriteRenderer rock;
+    public string levelName;
 
     public SpriteRenderer GetRock()
     {
@@ -24,12 +24,12 @@ public class GridGenerator : MonoBehaviour
     public static List<List<int>> intGrid;
     public static List<List<GameObject>> objectsGrid;
     public static List<List<GameObject>> rockGrid;
-
+    
     private void Start()
     {
         intGrid = new List<List<int>>();
         rockGrid = new List<List<GameObject>>();
-        ReadGrid("level1");
+        ReadGrid(levelName);
         objectsGrid = new List<List<GameObject>>();
         //创建状态表格和物体表格
         for (int i = 0; i < width; i++)
@@ -88,7 +88,7 @@ public class GridGenerator : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        WriteGameSaveData("level1");
+        WriteGameSaveData(levelName);
         Debug.Log("Quit!");
     }
 
