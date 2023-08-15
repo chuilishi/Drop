@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,12 +13,11 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     public static int enemyNum = 0;
-    
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
-        
+        instance = this;
     }
 
     // Update is called once per frame
@@ -25,12 +26,12 @@ public class GameManager : MonoBehaviour
         HandleEscape();
     }
 
-    public void enemyCounter(int addNum)
+    public void EnemyCounter(int addNum)
     {
         enemyNum += addNum;
-        if (addNum == 0)
+        if (enemyNum == 0)
         {
-            NextLevel(GridGenerator.instance.levelName);
+            instance.ShowCongratulationUI();
             GridGenerator.instance.levelName += 1;
             enemyNum = 0;
         }
@@ -57,18 +58,10 @@ public class GameManager : MonoBehaviour
     public void ShowCongratulationUI()
     {
         congratulationUI.SetActive(!congratulationUI.activeSelf);
-        if (!congratulationUI.activeSelf)
-        {
-            Time.timeScale = 1;
-        }
-        else
-        {
-            Time.timeScale = 0;
-        }
     }
-
-    public void NextLevel(int levelName)
+    
+    public void NextLevel()
     {
-        GridGenerator.instance.levelName = levelName;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
     }
 }

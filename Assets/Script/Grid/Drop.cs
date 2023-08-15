@@ -6,6 +6,7 @@ public class Drop : GridBase
 {
     public float MoveTime;
     protected virtual bool Move(Vector2Int destination) {
+        Debug.Log(GameManager.enemyNum);
         Vector2 Destination = new Vector2(-GridGenerator.width/2f+destination.x-0.5f,-GridGenerator.height/2f+destination.y);
         if(GridGenerator.intGrid[destination.x][destination.y] == GridType.Rock)return false;
         if(GridGenerator.intGrid[destination.x][destination.y] == GridType.Enemy){
@@ -17,6 +18,7 @@ public class Drop : GridBase
                 GridGenerator.rockGrid[destination.x][destination.y].GetComponent<SpriteRenderer>().enabled = true;
                 SoundManager.instance.Enemy2Rock();
                 Destroy(gameObject);
+                GameManager.instance.EnemyCounter(-2);
                 return true;
             }
             else if(myType == GridType.Character)
@@ -28,7 +30,6 @@ public class Drop : GridBase
         GridGenerator.intGrid[index.x][index.y] = 0;
         GridGenerator.objectsGrid[destination.x][destination.y] = gameObject;
         GridGenerator.objectsGrid[index.x][index.y] = null;
-        
         index = destination;
 
         Animation anim = GetComponent<Animation>();
@@ -61,21 +62,24 @@ public class Drop : GridBase
     public virtual void Hitted(Vector2Int Comer)
     {
         Vector2Int vertical = index - Comer;
+        bool isDead = false;
         if(Move(index+vertical)){
             return;
         }
-        SoundManager.instance.DropDivision();
         GameObject Clone = Instantiate(gameObject);
+        GameManager.instance.EnemyCounter(1);
         Vector2Int horizental = new Vector2Int(vertical.y,vertical.x);
-        bool isDead = Clone.GetComponent<Drop>().Move(index + horizental);
-        if (!isDead)Destroy(Clone);
-        else GameManager.instance.enemyCounter(1);
-        isDead &= Move(index-horizental);
-        if(isDead)
+        if (!Clone.GetComponent<Drop>().Move(index + horizental))
         {
-            GameManager.instance.enemyCounter(-1);
-            SoundManager.instance.EnemyDead();
+            isDead = true;
+            Destroy(Clone);
+            GameManager.instance.EnemyCounter(-1);
+        }
+        if(!Move(index-horizental))
+        {
+            if(isDead)SoundManager.instance.EnemyDead();
             Destroy(gameObject);
+            GameManager.instance.EnemyCounter(-1);
         }
     }
 }

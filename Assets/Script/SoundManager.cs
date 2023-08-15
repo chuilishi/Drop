@@ -21,12 +21,22 @@ public class SoundManager : MonoBehaviour
     
     private void Awake()
     {
+        _allAudioSources = new List<AudioSource>();
         DontDestroyOnLoad(gameObject);
         instance = this;
         _allAudioSources.Add(dropDivisionAudioSource);
         _allAudioSources.Add(gameStartAudioSource);
         _allAudioSources.Add(enemyDeadAudioSource);
         _allAudioSources.Add(enemy2RockAudioSource);
+        foreach (var audioSource in _allAudioSources)
+        {
+            audioSource.volume = globalVolume;
+        }
+    }
+
+    private void Start()
+    {
+        gameStartAudioSource.Play();
     }
 
     public void DropDivision()

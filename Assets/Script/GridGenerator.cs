@@ -27,7 +27,6 @@ public class GridGenerator : MonoBehaviour
     }
     private void Start()
     {
-        
         intGrid = new List<List<int>>();
         rockGrid = new List<List<GameObject>>();
         ReadGrid(levelName);
@@ -92,7 +91,7 @@ public class GridGenerator : MonoBehaviour
         Debug.Log("Quit!");
     }
 
-    void WriteGameSaveData(int levelName)
+    public void WriteGameSaveData(int levelName)
     {
         string currentDirectory = Environment.CurrentDirectory;
         Debug.Log("FullName= " + currentDirectory);
@@ -120,7 +119,7 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
-    void ReadGrid(int levelName)
+    public void ReadGrid(int levelName)
     {
         string currentDirectory = Environment.CurrentDirectory;
         string filePath = Path.Combine(currentDirectory, "Assets", "levelInfo", levelName.ToString() + ".txt");
