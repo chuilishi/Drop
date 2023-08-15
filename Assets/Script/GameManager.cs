@@ -6,6 +6,12 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject inGameMenu;
+    [SerializeField]
+    private GameObject congratulationUI;
+
+    public static GameManager instance;
+    public static int enemyNum = 0;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +23,17 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         HandleEscape();
+    }
+
+    public void enemyCounter(int addNum)
+    {
+        enemyNum += addNum;
+        if (addNum == 0)
+        {
+            NextLevel(GridGenerator.instance.levelName);
+            GridGenerator.instance.levelName += 1;
+            enemyNum = 0;
+        }
     }
     private void HandleEscape() //检测是否按下Esc键
     {
@@ -36,5 +53,22 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0;
         }
+    }
+    public void ShowCongratulationUI()
+    {
+        congratulationUI.SetActive(!congratulationUI.activeSelf);
+        if (!congratulationUI.activeSelf)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+    }
+
+    public void NextLevel(int levelName)
+    {
+        GridGenerator.instance.levelName = levelName;
     }
 }

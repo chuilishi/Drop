@@ -11,12 +11,8 @@ public class GridGenerator : MonoBehaviour
     public static int width = 36;
     public static int height = 16;
     public SpriteRenderer rock;
-    public string levelName;
-
-    public SpriteRenderer GetRock()
-    {
-        return rock;
-    }
+    public int levelName;
+    public static GridGenerator instance;
 
     public GameObject enemy;
     public GameObject character;
@@ -24,9 +20,14 @@ public class GridGenerator : MonoBehaviour
     public static List<List<int>> intGrid;
     public static List<List<GameObject>> objectsGrid;
     public static List<List<GameObject>> rockGrid;
-    
+
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
+        
         intGrid = new List<List<int>>();
         rockGrid = new List<List<GameObject>>();
         ReadGrid(levelName);
@@ -57,7 +58,6 @@ public class GridGenerator : MonoBehaviour
                     r.myType = GridType.Empty;
                 }
                 else r.myType = GridType.Rock;
-                
             }
         }
 
@@ -92,11 +92,11 @@ public class GridGenerator : MonoBehaviour
         Debug.Log("Quit!");
     }
 
-    void WriteGameSaveData(string levelName)
+    void WriteGameSaveData(int levelName)
     {
         string currentDirectory = Environment.CurrentDirectory;
         Debug.Log("FullName= " + currentDirectory);
-        string filePath = Path.Combine(currentDirectory, "Assets", "levelInfo", levelName + ".txt");
+        string filePath = Path.Combine(currentDirectory, "Assets", "levelInfo", levelName.ToString() + ".txt");
         Debug.Log("filePath=  " + filePath);
         try
         {
@@ -120,10 +120,10 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
-    void ReadGrid(string levelName)
+    void ReadGrid(int levelName)
     {
         string currentDirectory = Environment.CurrentDirectory;
-        string filePath = Path.Combine(currentDirectory, "Assets", "levelInfo", levelName + ".txt");
+        string filePath = Path.Combine(currentDirectory, "Assets", "levelInfo", levelName.ToString() + ".txt");
         if (!File.Exists(filePath))
         {
             Debug.Log("没有此关卡");
@@ -146,7 +146,11 @@ public class GridGenerator : MonoBehaviour
                 if (num == '\n') break;
                 if (num - '0' == GridType.Empty) intGrid[i].Add(GridType.Empty);
                 else if (num - '0' == GridType.Rock) intGrid[i].Add(GridType.Rock);
-                else if (num - '0' == GridType.Enemy) intGrid[i].Add(GridType.Enemy);
+                else if (num - '0' == GridType.Enemy)
+                {
+                    GameManager.enemyNum++;
+                    intGrid[i].Add(GridType.Enemy);
+                }
                 else if (num - '0' == GridType.Character) intGrid[i].Add(GridType.Character);
             }
         }

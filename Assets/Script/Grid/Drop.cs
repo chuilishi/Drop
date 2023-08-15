@@ -15,6 +15,7 @@ public class Drop : GridBase
                 Debug.Log("Enemy碰撞");
                 Destroy(GridGenerator.objectsGrid[destination.x][destination.y]);
                 GridGenerator.rockGrid[destination.x][destination.y].GetComponent<SpriteRenderer>().enabled = true;
+                SoundManager.instance.Enemy2Rock();
                 Destroy(gameObject);
                 return true;
             }
@@ -23,7 +24,6 @@ public class Drop : GridBase
                 GridGenerator.objectsGrid[destination.x][destination.y].GetComponent<Drop>().Hitted(index);
             }
         }
-
         GridGenerator.intGrid[destination.x][destination.y] = myType;
         GridGenerator.intGrid[index.x][index.y] = 0;
         GridGenerator.objectsGrid[destination.x][destination.y] = gameObject;
@@ -64,9 +64,18 @@ public class Drop : GridBase
         if(Move(index+vertical)){
             return;
         }
+        SoundManager.instance.DropDivision();
         GameObject Clone = Instantiate(gameObject);
         Vector2Int horizental = new Vector2Int(vertical.y,vertical.x);
-        if (!Clone.GetComponent<Drop>().Move(index + horizental)) Destroy(Clone);
-        if(!Move(index-horizental))Destroy(gameObject);
+        bool isDead = Clone.GetComponent<Drop>().Move(index + horizental);
+        if (!isDead)Destroy(Clone);
+        else GameManager.instance.enemyCounter(1);
+        isDead &= Move(index-horizental);
+        if(isDead)
+        {
+            GameManager.instance.enemyCounter(-1);
+            SoundManager.instance.EnemyDead();
+            Destroy(gameObject);
+        }
     }
 }
