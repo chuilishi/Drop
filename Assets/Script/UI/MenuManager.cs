@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject optionsMenu;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,5 +28,15 @@ public class MenuManager : MonoBehaviour
     public void Play()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public void Options()
+    {
+        optionsMenu.SetActive(true); 
+    }
+
+    public void Back()
+    {
+        optionsMenu.SetActive(false);
     }
 }

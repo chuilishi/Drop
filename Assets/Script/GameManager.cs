@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     private GameObject inGameMenu;
     [SerializeField]
     private GameObject congratulationUI;
+    [SerializeField]
+    private GameObject optionsMenu;
 
     public static GameManager instance;
     public static int enemyNum = 0;
@@ -46,13 +48,20 @@ public class GameManager : MonoBehaviour
 
     public void ShowIngameMenu() //显示暂停菜单
     {
-        inGameMenu.SetActive(!inGameMenu.activeSelf);
-        if(!inGameMenu.activeSelf) 
+        if(optionsMenu.activeSelf)
         {
-            Time.timeScale = 1;
-        }else //暂停游戏
+            ShowMain();
+        }else
         {
-            Time.timeScale = 0;
+            inGameMenu.SetActive(!inGameMenu.activeSelf);
+            if (!inGameMenu.activeSelf)
+            {
+                Time.timeScale = 1;
+            }
+            else //暂停游戏
+            {
+                Time.timeScale = 0;
+            }
         }
     }
     public void ShowCongratulationUI()
@@ -63,5 +72,17 @@ public class GameManager : MonoBehaviour
     public void NextLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+    }
+    //显示选项菜单
+    public void ShowOptions()
+    {
+        inGameMenu.SetActive(false);
+        optionsMenu.SetActive(true);
+    }
+
+    public void ShowMain()
+    {
+        inGameMenu.SetActive(true);
+        optionsMenu.SetActive(false);
     }
 }

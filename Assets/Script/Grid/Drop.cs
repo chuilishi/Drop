@@ -16,7 +16,7 @@ public class Drop : GridBase
                 Debug.Log("Enemy碰撞");
                 Destroy(GridGenerator.objectsGrid[destination.x][destination.y]);
                 GridGenerator.rockGrid[destination.x][destination.y].GetComponent<SpriteRenderer>().enabled = true;
-                SoundManager.instance.Enemy2Rock();
+                SoundManager.instance.PlaySFX("敌人变成墙壁"); //这里要改
                 Destroy(gameObject);
                 GameManager.instance.EnemyCounter(-2);
                 return true;
@@ -77,7 +77,8 @@ public class Drop : GridBase
         }
         if(!Move(index-horizental))
         {
-            if(isDead)SoundManager.instance.EnemyDead();
+            if(isDead)SoundManager.Instance.PlaySFX("敌人碰墙死亡"); //这里要改
+            
             Destroy(gameObject);
             GameManager.instance.EnemyCounter(-1);
         }

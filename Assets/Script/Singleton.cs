@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour //说明T是继承MonoBehaviour的
+{
+    public static T instance;
+
+    public static T Instance
+    {
+        get
+        {
+            if(instance == null)
+            {
+                instance = FindAnyObjectByType<T>();
+            }
+
+            return instance;
+        }
+    }
+}
